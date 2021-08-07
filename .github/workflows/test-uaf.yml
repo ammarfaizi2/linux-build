@@ -39,13 +39,13 @@ jobs:
       - name: Download Config
         run: |
           cd /tmp/build/linux && \
-          wget -q https://raw.githubusercontent.com/ammarfaizi2/linux-build/master/config/test-uaf.txt -O .config;
+          wget -q https://raw.githubusercontent.com/ammarfaizi2/linux-build/master/config/test-uaf.txt -O .config && \
+          make olddefconfig -j4 && \
+          head -n30 .config;
 
       - name: Build
         run: |
           cd /tmp/build/linux && \
-          make olddefconfig -j4 && \
-          head -n30 .config && \
           make deb-pkg -j4;
 
       - name: List File
