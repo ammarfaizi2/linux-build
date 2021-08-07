@@ -1,0 +1,35 @@
+
+name: Linux Mainline (test-uaf)
+
+on:
+  push:
+    branches: [ build ]
+  pull_request:
+    branches: [ build ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: sudo apt-get install gcc g++ clang make unzip flex bison zstd build-essential -y;
+
+      - name: Download Source
+        run: |
+          mkdir -pv /tmp/build && \
+          cd /tmp/build && \
+          wget https://github.com/ammarfaizi2/linux-block/archive/refs/heads/master.zip;
+
+      - name: Build
+        run: |
+          cd /tmp/build && \
+          unzip master.zip >> /dev/null && \
+          mv linux-block-master linux && \
+          cd linux && \
+          wget https://raw.githubusercontent.com/ammarfaizi2/linux-build/master/config/test-uaf.txt -O .config && \
+          make deb-pkg -j$(nproc);
