@@ -19,7 +19,9 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get install gcc g++ clang make unzip flex bison zstd \
-            build-essential libelf-dev -y;
+            build-essential libelf-dev -y && \
+          gcc --version && \
+          make --version;
 
       - name: Download Source
         run: |
@@ -42,4 +44,19 @@ jobs:
       - name: Build
         run: |
           cd /tmp/build/linux && \
+          make olddefconfig -j4 && \
+          head -n30 .config && \
           make deb-pkg -j4;
+
+      - name: List File
+        run: |
+          cd /tmp/build && \
+          ls -la && \
+          cd /tmp/build/linux && \
+          ls -la;
+
+      # - name: Download a Build Artifact
+      #   uses: actions/download-artifact@v2.0.10
+      #   with:
+      #     name: Linux
+      #     path: 
