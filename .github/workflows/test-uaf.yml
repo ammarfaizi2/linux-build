@@ -17,19 +17,29 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install Dependencies
-        run: sudo apt-get install gcc g++ clang make unzip flex bison zstd build-essential -y;
+        run: |
+          sudo apt-get install gcc g++ clang make unzip flex bison zstd \
+            build-essential libelf-dev -y;
 
       - name: Download Source
         run: |
           mkdir -pv /tmp/build && \
           cd /tmp/build && \
-          wget https://github.com/ammarfaizi2/linux-block/archive/refs/heads/master.zip;
+          wget -q https://github.com/ammarfaizi2/linux-block/archive/refs/heads/master.zip && \
+          nproc;
 
-      - name: Build
+      - name: Extract Source
         run: |
           cd /tmp/build && \
           unzip master.zip >> /dev/null && \
-          mv linux-block-master linux && \
-          cd linux && \
-          wget https://raw.githubusercontent.com/ammarfaizi2/linux-build/master/config/test-uaf.txt -O .config && \
+          mv linux-block-master linux;
+
+      - name: Download Config
+        run: |
+          cd /tmp/build/linux && \
+          wget -q https://raw.githubusercontent.com/ammarfaizi2/linux-build/master/config/test-uaf.txt -O .config && \
+
+      - name: Build
+        run: |
+          cd /tmp/build/linux && \
           make deb-pkg -j$(nproc);
