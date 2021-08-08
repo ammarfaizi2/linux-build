@@ -27,14 +27,14 @@ jobs:
         run: |
           mkdir -pv /tmp/build && \
           cd /tmp/build && \
-          wget -q https://github.com/ammarfaizi2/linux-block/archive/refs/heads/master.zip && \
+          wget -q https://github.com/ammarfaizi2/linux-block/archive/refs/heads/test-bluetooth-uaf.zip && \
           nproc;
 
       - name: Extract Source
         run: |
           cd /tmp/build && \
-          unzip master.zip >> /dev/null && \
-          mv linux-block-master linux;
+          unzip test-bluetooth-uaf.zip >> /dev/null && \
+          mv linux-block-test-bluetooth-uaf linux;
 
       - name: Download Config
         run: |
@@ -55,8 +55,9 @@ jobs:
           cd /tmp/build/linux && \
           ls -la;
 
-      # - name: Download a Build Artifact
-      #   uses: actions/download-artifact@v2.0.10
-      #   with:
-      #     name: Linux
-      #     path: 
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2.0.10
+        with:
+          name: Linux
+          path: /tmp/*.deb
+
